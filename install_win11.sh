@@ -3,7 +3,7 @@
 # Variables
 ISO_NAME="Win11_24H2_French_x64.iso"
 ISO_PATH="/var/lib/vz/template/iso/$ISO_NAME"
-ISO_URL="https://lecrabeinfo.net/telecharger/windows-11-24h2-64-bits/"
+ISO_URL="https://software.download.prss.microsoft.com/dbazure/Win11_24H2_French_x64.iso?t=20777ac4-fce6-4e0f-8f9a-639ec6ddc60f&P1=1742139497&P2=601&P3=2&P4=HYAJmgDON99Sh8h2KX4dmSC5MQJgUyDybN4t1A6exVnLcyJ6F0wLijn%2b8TJMD7BMUr111Huf7Y6poAhSooNuZHYQsgv5QM%2fMtnDCp7JadU2EZYPaWAW6Rw7DGiPpz7nM4y%2blM5FWfphNkza9iohhuQV0HSB9LfAQ5LdHRVUpIjp9%2fnc%2bsVHXOVfLgHHSrMbkasX6X2%2fij8FWSoGLl8FTSHV7Qh8gpgvCcJzMH2YhK68qSPzkFfEHBkx7DxNgUcVPVEsTRn7qiEp2R5VdDSeTVcl02WIeWma8szjwATEUBpn%2bWVzrtSDw6stlYmXVVDTIyjfVeO%2bjH3QlhV7fH8nPdA%3d%3d"
 VIRTIO_ISO_NAME="virtio-win.iso"
 VIRTIO_ISO_PATH="/var/lib/vz/template/iso/$VIRTIO_ISO_NAME"
 VIRTIO_ISO_URL="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
@@ -41,7 +41,7 @@ VM_ID=110               # ID unique pour la VM
 VM_NAME="Windows11"     # Nom de la VM
 STORAGE="local-lvm"     # Stockage utilisé pour le disque
 DISK_SIZE="80G"         # Taille du disque
-RAM_SIZE="8192"         # RAM en Mo (8 Go)
+RAM_SIZE="16384"         # RAM en Mo (16 Go)
 CPU_CORES="1"           # Nombre de cœurs CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
 
@@ -69,7 +69,7 @@ qm set $VM_ID --vga qxl
 qm set $VM_ID --tpmstate0 $STORAGE:1,version=v2.0
 
 # Ajouter une note dans Proxmox pour la VM
-qm set $VM_ID --description "# Windows 11\n### https://github.com/Chouteau49/windows11_proxmox"
+qm set $VM_ID --description "Windows 11 - https://github.com/Chouteau49/windows11_proxmox"
 
 # Démarrage de la VM
 qm start $VM_ID
