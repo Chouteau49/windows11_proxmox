@@ -46,7 +46,7 @@ CPU_CORES="16"           # Nombre de cœurs CPU
 CPU_SOCKETS="1"        # Nombre de sockets CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
 
-echo "version : 2"
+echo "version : 3"
 
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 echo "VM_ID: $VM_ID"
@@ -56,7 +56,7 @@ echo "DISK_SIZE: $DISK_SIZE"
 
 
 # Création de la VM
-qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 e1000,bridge=$BRIDGE --bios ovmf --machine q35 --sata0 $STORAGE:$DISK_SIZE,format=raw
+qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 e1000,bridge=$BRIDGE --bios ovmf --machine q35 --sata0 "$STORAGE:$DISK_SIZE,format=raw"
 if [ $? -ne 0 ]; then
     echo "Erreur lors de la création de la VM." >&2
     exit 1
