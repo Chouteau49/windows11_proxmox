@@ -37,12 +37,13 @@ else
 fi
 
 # Paramètres de la VM
-VM_ID=110               # ID unique pour la VM
+VM_ID=101              # ID unique pour la VM
 VM_NAME="Windows11"     # Nom de la VM
 STORAGE="local-lvm"     # Stockage utilisé pour le disque
-DISK_SIZE="80G"         # Taille du disque
+DISK_SIZE="120G"         # Taille du disque
 RAM_SIZE="16384"         # RAM en Mo (16 Go)
 CPU_CORES="1"           # Nombre de cœurs CPU
+CPU_SOCKETS="16"        # Nombre de sockets CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
 
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
