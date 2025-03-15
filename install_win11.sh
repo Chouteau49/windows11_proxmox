@@ -49,10 +49,10 @@ BRIDGE="vmbr0"          # Interface réseau de la VM
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 
 # Création de la VM
-qm create $VM_ID --name $VM_NAME --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 virtio,bridge=$BRIDGE --bios ovmf
+qm create $VM_ID --name $VM_NAME --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 virtio,bridge=$BRIDGE --bios ovmf --machine q35
 
 # Ajout du disque
-qm set $VM_ID --scsihw virtio-scsi-pci --scsi0 $STORAGE:$DISK_SIZE
+qm set $VM_ID --scsihw virtio-scsi-single --scsi0 $STORAGE:$DISK_SIZE
 
 # Ajout du lecteur CD avec l'ISO de Windows
 qm set $VM_ID --ide2 local:iso/$ISO_NAME,media=cdrom
