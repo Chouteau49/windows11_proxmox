@@ -49,13 +49,16 @@ BRIDGE="vmbr0"          # Interface réseau de la VM
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 
 # Création de la VM
-qm create $VM_ID --name $VM_NAME --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 virtio,bridge=$BRIDGE --bios ovmf --machine q35
+qm create $VM_ID --name $VM_NAME --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 e1000,bridge=$BRIDGE --bios ovmf --machine q35
 
-# Ajout du disque principal
-qm set $VM_ID --scsihw virtio-scsi-single --scsi0 $STORAGE:$DISK_SIZE
+# Ajout du disque EFI en disk-0
+qm set $VM_ID --efidisk0 $STORAGE:1,efitype=4m,format=qcow2
 
-# Ajout du disque stat0
-qm set $VM_ID --sata0 $STORAGE:120G
+# Ajout du disque dur principal en sata0 (disk-1)
+qm set $VM_ID --sata0 $STORAGE:$DISK_SIZE
+
+# Ajout du contrôleur SCSI en VirtIO SCSI single
+qm set $VM_ID --scsihw virtio-scsi-single
 
 # Ajout du lecteur CD avec l'ISO de Windows
 qm set $VM_ID --ide2 local:iso/$ISO_NAME,media=cdrom
@@ -66,10 +69,10 @@ qm set $VM_ID --ide3 local:iso/$VIRTIO_ISO_NAME,media=cdrom
 # Configuration du boot sur sata0 et ide2
 qm set $VM_ID --boot order=sata0,ide2
 
-# Ajout d'une carte graphique virtio-gpu
-qm set $VM_ID --vga virtio
+# Ajout d'une carte graphique virtio-gpu avec 512 Mo de mémoire
+qm set $VM_ID --vga virtio --memory 512
 
-# Activation du TPM 2.0 pour la compatibilité avec Windows 11
+# Activation du TPM 2.0 pour la compatibilité avec Windows 11 en disk-2
 qm set $VM_ID --tpmstate0 $STORAGE:1,version=v2.0
 
 # Ajouter une note dans Proxmox pour la VM
