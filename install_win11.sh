@@ -45,8 +45,9 @@ RAM_SIZE="16384"         # RAM en Mo (16 Go)
 CPU_CORES="16"           # Nombre de cœurs CPU
 CPU_SOCKETS="1"        # Nombre de sockets CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
+VMNET="virtio,bridge=vmbr0,firewall=0,tag=401" # Your network definition for VM
 
-echo "version : 3"
+echo "version : 4"
 
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 echo "VM_ID: $VM_ID"
@@ -56,39 +57,35 @@ echo "DISK_SIZE: $DISK_SIZE"
 
 
 # Création de la VM
-qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 e1000,bridge=$BRIDGE --bios ovmf --machine q35 --sata0 "$STORAGE:$DISK_SIZE,format=raw"
+qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --bios ovmf --machine q35 --sata0 "$STORAGE:$DISK_SIZE,format=raw"
 if [ $? -ne 0 ]; then
     echo "Erreur lors de la création de la VM." >&2
     exit 1
 fi
 
-# Ajout du disque EFI en disk-0 avec pre-enrolled-keys=1
-qm set $VM_ID --efidisk0 $STORAGE:1,efitype=4m,size=4M,pre-enrolled-keys=1
 
+qm set $VM_ID --name $VMNAME
+qm set $VM_ID --bios ovmf
+qm set $VM_ID --cpu host
+qm set $VM_ID --machine pc-q35-8.1
 # Ajout du contrôleur SCSI en VirtIO SCSI single
 qm set $VM_ID --scsihw virtio-scsi-single
-
-# Ajout du lecteur CD avec l'ISO de Windows
+qm set $VM_ID --agent 1,fstrim_cloned_disks=1
+sed -i 's/scsi0:/sata0:/' /etc/pve/qemu-server/$VM_ID.conf
+sed -i 's/sata0:.*/&,discard=on/' /etc/pve/qemu-server/$VM_ID.conf
 qm set $VM_ID --ide2 local:iso/$ISO_NAME,media=cdrom
-
-# Ajout du lecteur CD avec l'ISO des pilotes VirtIO
 qm set $VM_ID --ide3 local:iso/$VIRTIO_ISO_NAME,media=cdrom
-
-# Configuration du boot sur sata0 et ide2
-qm set $VM_ID --boot order=sata0,ide2
-
-# Ajout d'une carte graphique virtio-gpu avec 512 Mo de mémoire
+qm set $VM_ID --boot order='sata0;ide2'
+qm set $VM_ID --ostype win11
+qm set $VM_ID --net0 $VMNET
+qm set $VM_ID --efidisk0 $STORAGE:1,efitype=4m,pre-enrolled-keys=1,size=4M
+qm set $VM_ID --tpmstate0 $STORAGE:1,size=4M,version=v2.0
 qm set $VM_ID --vga virtio
-
-# Activation du TPM 2.0 pour la compatibilité avec Windows 11 en disk-2
-qm set $VM_ID --tpmstate0 $STORAGE:1,version=v2.0
-
+qm start $VM_ID
 # Ajouter une note dans Proxmox pour la VM
 qm set $VM_ID --description "Windows 11 - https://github.com/Chouteau49/windows11_proxmox"
-
 # Démarrage de la VM à l'amorçage
 qm set $VM_ID --onboot 1
-
 # Démarrage de la VM
 qm start $VM_ID
 
