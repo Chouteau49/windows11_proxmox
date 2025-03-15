@@ -40,14 +40,14 @@ fi
 VM_ID=101              # ID unique pour la VM
 VM_NAME="Windows11"     # Nom de la VM
 STORAGE="local-lvm"     # Stockage utilisé pour le disque
-DISK_SIZE="120G"         # Taille du disque
+DISK_SIZE="100G"         # Taille du disque
 RAM_SIZE="16384"         # RAM en Mo (16 Go)
 CPU_CORES="16"           # Nombre de cœurs CPU
 CPU_SOCKETS="1"        # Nombre de sockets CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
 VMNET="virtio,bridge=vmbr0,firewall=0,tag=401" # Your network definition for VM
 
-echo "version : 6"
+echo "version : 7"
 
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 echo "VM_ID: $VM_ID"
@@ -55,7 +55,7 @@ echo "STORAGE: $STORAGE"
 echo "DISK_SIZE: $DISK_SIZE"
 
 # Création de la VM
-qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --sata0 "$STORAGE:120G,format=raw"
+qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --sata0 "$STORAGE:100G,format=raw"
 if [ $? -ne 0 ]; then
     echo "Erreur lors de la création de la VM." >&2
     exit 1
