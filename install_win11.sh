@@ -52,7 +52,7 @@ echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 qm create $VM_ID --name $VM_NAME --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 e1000,bridge=$BRIDGE --bios ovmf --machine q35
 
 # Ajout du disque EFI en disk-0
-qm set $VM_ID --efidisk0 $STORAGE:1,efitype=4m,format=qcow2
+qm set $VM_ID --efidisk0 $STORAGE:1,efitype=4m
 
 # Ajout du disque dur principal en sata0 (disk-1)
 qm set $VM_ID --sata0 $STORAGE:$DISK_SIZE
@@ -67,7 +67,7 @@ qm set $VM_ID --ide2 local:iso/$ISO_NAME,media=cdrom
 qm set $VM_ID --ide3 local:iso/$VIRTIO_ISO_NAME,media=cdrom
 
 # Configuration du boot sur sata0 et ide2
-qm set $VM_ID --boot order=sata0,ide2
+qm set $VM_ID --boot order=sata0;ide2
 
 # Ajout d'une carte graphique virtio-gpu avec 512 Mo de mémoire
 qm set $VM_ID --vga virtio --memory 512
