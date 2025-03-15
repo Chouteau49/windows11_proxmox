@@ -47,24 +47,20 @@ CPU_SOCKETS="1"        # Nombre de sockets CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
 VMNET="virtio,bridge=vmbr0,firewall=0,tag=401" # Your network definition for VM
 
-echo "version : 4"
+echo "version : 5"
 
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 echo "VM_ID: $VM_ID"
 echo "STORAGE: $STORAGE"
 echo "DISK_SIZE: $DISK_SIZE"
 
-
-
 # Création de la VM
-qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --bios ovmf --machine q35 --sata0 "$STORAGE:$DISK_SIZE,format=raw"
+qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS
 if [ $? -ne 0 ]; then
     echo "Erreur lors de la création de la VM." >&2
     exit 1
 fi
 
-
-qm set $VM_ID --name $VMNAME
 qm set $VM_ID --bios ovmf
 qm set $VM_ID --cpu host
 qm set $VM_ID --machine pc-q35-8.1
