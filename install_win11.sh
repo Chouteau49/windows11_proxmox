@@ -51,7 +51,7 @@ echo "VM_ID: $VM_ID"
 echo "STORAGE: $STORAGE"
 echo "DISK_SIZE: $DISK_SIZE"
 # Création de la VM
-qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 e1000,bridge=$BRIDGE --bios ovmf --machine q35 --sata0 $STORAGE:$DISK_SIZE,format=raw
+qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 e1000,bridge=$BRIDGE --bios ovmf --machine q35 --scsi0 $STORAGE:$DISK_SIZE,format=raw
 if [ $? -ne 0 ]; then
     echo "Erreur lors de la création de la VM." >&2
     exit 1
