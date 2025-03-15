@@ -40,7 +40,7 @@ fi
 VM_ID=101              # ID unique pour la VM
 VM_NAME="Windows11"     # Nom de la VM
 STORAGE="local-lvm"     # Stockage utilisé pour le disque
-DISK_SIZE="100G"         # Taille du disque
+DISK_SIZE="50G"         # Taille du disque
 RAM_SIZE="16384"         # RAM en Mo (16 Go)
 CPU_CORES="16"           # Nombre de cœurs CPU
 CPU_SOCKETS="1"        # Nombre de sockets CPU
@@ -55,7 +55,7 @@ echo "STORAGE: $STORAGE"
 echo "DISK_SIZE: $DISK_SIZE"
 
 # Création de la VM
-qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --sata0 "$STORAGE:100G,format=raw"
+qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS
 if [ $? -ne 0 ]; then
     echo "Erreur lors de la création de la VM." >&2
     exit 1
@@ -66,9 +66,9 @@ qm set $VM_ID --cpu host
 qm set $VM_ID --machine pc-q35-8.1
 # Ajout du contrôleur SCSI en VirtIO SCSI single
 qm set $VM_ID --scsihw virtio-scsi-single
-# qm set $VM_ID --agent 1,fstrim_cloned_disks=1
-# sed -i 's/scsi0:/sata0:/' /etc/pve/qemu-server/$VM_ID.conf
-# sed -i 's/sata0:.*/&,discard=on/' /etc/pve/qemu-server/$VM_ID.conf
+qm set $VM_ID --agent 1,fstrim_cloned_disks=1
+sed -i 's/scsi0:/sata0:/' /etc/pve/qemu-server/$VM_ID.conf
+sed -i 's/sata0:.*/&,discard=on/' /etc/pve/qemu-server/$VM_ID.conf
 qm set $VM_ID --ide2 local:iso/$ISO_NAME,media=cdrom
 qm set $VM_ID --ide3 local:iso/$VIRTIO_ISO_NAME,media=cdrom
 qm set $VM_ID --boot order='sata0;ide2'
