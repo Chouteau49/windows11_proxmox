@@ -58,9 +58,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Ajout du disque dur principal en sata0 (disk-1)
-qm set $VM_ID --sata0 $STORAGE:$VM_ID-disk-1,size=$DISK_SIZE
-
 # Ajout du disque EFI en disk-0 avec pre-enrolled-keys=1
 qm set $VM_ID --efidisk0 $STORAGE:1,efitype=4m,size=4M,pre-enrolled-keys=1
 
