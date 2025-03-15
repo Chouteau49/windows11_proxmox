@@ -45,7 +45,7 @@ RAM_SIZE="16384"         # RAM en Mo (16 Go)
 CPU_CORES="16"           # Nombre de cœurs CPU
 CPU_SOCKETS="1"        # Nombre de sockets CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
-VMNET="virtio,bridge=vmbr0,firewall=0,tag=401" # Your network definition for VM
+VMNET="e1000,bridge=vmbr0,firewall=0,tag=401" # Your network definition for VM
 
 echo "version : 8"
 
@@ -66,9 +66,9 @@ qm set $VM_ID --cpu host
 qm set $VM_ID --machine pc-q35-8.1
 # Ajout du contrôleur SCSI en VirtIO SCSI single
 qm set $VM_ID --scsihw virtio-scsi-single
-qm set $VM_ID --agent 1,fstrim_cloned_disks=1
-sed -i 's/scsi0:/sata0:/' /etc/pve/qemu-server/$VM_ID.conf
-sed -i 's/sata0:.*/&,discard=on/' /etc/pve/qemu-server/$VM_ID.conf
+# qm set $VM_ID --agent 1,fstrim_cloned_disks=1
+# sed -i 's/scsi0:/sata0:/' /etc/pve/qemu-server/$VM_ID.conf
+# sed -i 's/sata0:.*/&,discard=on/' /etc/pve/qemu-server/$VM_ID.conf
 qm set $VM_ID --ide2 local:iso/$ISO_NAME,media=cdrom
 qm set $VM_ID --ide3 local:iso/$VIRTIO_ISO_NAME,media=cdrom
 qm set $VM_ID --boot order='sata0;ide2'
@@ -87,3 +87,7 @@ qm start $VM_ID
 
 echo "VM Windows 11 créée et démarrée avec succès !"
 echo "Connectez-vous à l'interface graphique de la VM pour installer Windows 11."
+
+# Instruction pour ajouter un disque SATA après l'exécution du script
+echo "Après l'exécution de ce script, ajoutez un disque SATA à la VM avec la commande suivante :"
+echo "qm set $VM_ID --sata0 $STORAGE:$VM_ID-disk-1,size=$DISK_SIZE"
