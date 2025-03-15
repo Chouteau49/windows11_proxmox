@@ -49,7 +49,7 @@ BRIDGE="vmbr0"          # Interface réseau de la VM
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 
 # Création de la VM
-qm create $VM_ID --name $VM_NAME --memory $RAM_SIZE --cores $CPU_CORES --net0 virtio,bridge=$BRIDGE
+qm create $VM_ID --name $VM_NAME --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 virtio,bridge=$BRIDGE --bios ovmf
 
 # Ajout du disque
 qm set $VM_ID --scsihw virtio-scsi-pci --scsi0 $STORAGE:$DISK_SIZE
@@ -63,8 +63,8 @@ qm set $VM_ID --ide3 local:iso/$VIRTIO_ISO_NAME,media=cdrom
 # Configuration du boot sur l'ISO de Windows
 qm set $VM_ID --boot order=ide2
 
-# Ajout d'une carte graphique standard
-qm set $VM_ID --vga qxl
+# Ajout d'une carte graphique virtio-gpu
+qm set $VM_ID --vga virtio
 
 # Activation du TPM 2.0 pour la compatibilité avec Windows 11
 qm set $VM_ID --tpmstate0 $STORAGE:1,version=v2.0
