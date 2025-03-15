@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Variables
-ISO_NAME="win11.iso"
+ISO_NAME="Win11_24H2_French_x64.iso"
 ISO_PATH="/var/lib/vz/template/iso/$ISO_NAME"
-ISO_URL="https://software-download.microsoft.com/pr/Win11_French_x64.iso"
+ISO_URL="https://lecrabeinfo.net/telecharger/windows-11-24h2-64-bits/"
 VIRTIO_ISO_NAME="virtio-win.iso"
 VIRTIO_ISO_PATH="/var/lib/vz/template/iso/$VIRTIO_ISO_NAME"
 VIRTIO_ISO_URL="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
@@ -42,7 +42,7 @@ VM_NAME="Windows11"     # Nom de la VM
 STORAGE="local-lvm"     # Stockage utilisé pour le disque
 DISK_SIZE="80G"         # Taille du disque
 RAM_SIZE="8192"         # RAM en Mo (8 Go)
-CPU_CORES="4"           # Nombre de cœurs CPU
+CPU_CORES="1"           # Nombre de cœurs CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
 
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
