@@ -47,7 +47,7 @@ CPU_SOCKETS="1"        # Nombre de sockets CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
 VMNET="virtio,bridge=vmbr0,firewall=0,tag=401" # Your network definition for VM
 
-echo "version : 5"
+echo "version : 6"
 
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 echo "VM_ID: $VM_ID"
@@ -55,7 +55,7 @@ echo "STORAGE: $STORAGE"
 echo "DISK_SIZE: $DISK_SIZE"
 
 # Création de la VM
-qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS
+qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --sata0 "$STORAGE:120G,format=raw"
 if [ $? -ne 0 ]; then
     echo "Erreur lors de la création de la VM." >&2
     exit 1
@@ -66,9 +66,9 @@ qm set $VM_ID --cpu host
 qm set $VM_ID --machine pc-q35-8.1
 # Ajout du contrôleur SCSI en VirtIO SCSI single
 qm set $VM_ID --scsihw virtio-scsi-single
-qm set $VM_ID --agent 1,fstrim_cloned_disks=1
-sed -i 's/scsi0:/sata0:/' /etc/pve/qemu-server/$VM_ID.conf
-sed -i 's/sata0:.*/&,discard=on/' /etc/pve/qemu-server/$VM_ID.conf
+# qm set $VM_ID --agent 1,fstrim_cloned_disks=1
+# sed -i 's/scsi0:/sata0:/' /etc/pve/qemu-server/$VM_ID.conf
+# sed -i 's/sata0:.*/&,discard=on/' /etc/pve/qemu-server/$VM_ID.conf
 qm set $VM_ID --ide2 local:iso/$ISO_NAME,media=cdrom
 qm set $VM_ID --ide3 local:iso/$VIRTIO_ISO_NAME,media=cdrom
 qm set $VM_ID --boot order='sata0;ide2'
