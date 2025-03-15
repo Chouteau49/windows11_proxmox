@@ -51,8 +51,11 @@ echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 # Création de la VM
 qm create $VM_ID --name $VM_NAME --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 virtio,bridge=$BRIDGE --bios ovmf --machine q35
 
-# Ajout du disque
+# Ajout du disque principal
 qm set $VM_ID --scsihw virtio-scsi-single --scsi0 $STORAGE:$DISK_SIZE
+
+# Ajout du disque stat0
+qm set $VM_ID --sata0 $STORAGE:120G
 
 # Ajout du lecteur CD avec l'ISO de Windows
 qm set $VM_ID --ide2 local:iso/$ISO_NAME,media=cdrom
@@ -60,8 +63,8 @@ qm set $VM_ID --ide2 local:iso/$ISO_NAME,media=cdrom
 # Ajout du lecteur CD avec l'ISO des pilotes VirtIO
 qm set $VM_ID --ide3 local:iso/$VIRTIO_ISO_NAME,media=cdrom
 
-# Configuration du boot sur l'ISO de Windows
-qm set $VM_ID --boot order=ide2
+# Configuration du boot sur sata0 et ide2
+qm set $VM_ID --boot order=sata0,ide2
 
 # Ajout d'une carte graphique virtio-gpu
 qm set $VM_ID --vga virtio
@@ -71,6 +74,9 @@ qm set $VM_ID --tpmstate0 $STORAGE:1,version=v2.0
 
 # Ajouter une note dans Proxmox pour la VM
 qm set $VM_ID --description "Windows 11 - https://github.com/Chouteau49/windows11_proxmox"
+
+# Démarrage de la VM à l'amorçage
+qm set $VM_ID --onboot 1
 
 # Démarrage de la VM
 qm start $VM_ID
