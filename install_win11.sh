@@ -50,12 +50,16 @@ echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 echo "VM_ID: $VM_ID"
 echo "STORAGE: $STORAGE"
 echo "DISK_SIZE: $DISK_SIZE"
+
 # Création de la VM
-qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 e1000,bridge=$BRIDGE --bios ovmf --machine q35 --scsi0 $STORAGE:$DISK_SIZE,format=raw
+qm create $VM_ID --name "$VM_NAME" --memory $RAM_SIZE --cores $CPU_CORES --sockets $CPU_SOCKETS --cpu host --net0 e1000,bridge=$BRIDGE --bios ovmf --machine q35
 if [ $? -ne 0 ]; then
     echo "Erreur lors de la création de la VM." >&2
     exit 1
 fi
+
+# Ajout du disque dur principal en sata0 (disk-1)
+qm set $VM_ID --sata0 $STORAGE:vm-$VM_ID-disk-1,size=$DISK_SIZE
 
 # Ajout du disque EFI en disk-0 avec pre-enrolled-keys=1
 qm set $VM_ID --efidisk0 $STORAGE:1,efitype=4m,size=4M,pre-enrolled-keys=1
