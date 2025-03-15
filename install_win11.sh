@@ -47,7 +47,7 @@ CPU_SOCKETS="1"        # Nombre de sockets CPU
 BRIDGE="vmbr0"          # Interface réseau de la VM
 VMNET="virtio,bridge=vmbr0,firewall=0,tag=401" # Your network definition for VM
 
-echo "version : 7"
+echo "version : 8"
 
 echo "Création de la VM Windows 11 avec l'ID $VM_ID..."
 echo "VM_ID: $VM_ID"
